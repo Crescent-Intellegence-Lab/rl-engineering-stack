@@ -1,19 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+// Deprecated source entry point.
+//
+// The repository presentation is now maintained as a student-facing Marp deck:
+//   presentation/slides.md
+//
+// The editable PowerPoint is uploaded manually as:
+//   presentation/rl-engineering-tools-student-facing.pptx
 
-const sourceDir = __dirname;
-const target = path.join(sourceDir, 'rl-engineering-tools-landscape.js');
-const parts = fs.readdirSync(sourceDir)
-  .filter((name) => /^part-\d+$/.test(name))
-  .sort();
-
-if (parts.length === 0) {
-  throw new Error('No presentation source parts were found.');
-}
-
-const source = parts
-  .map((name) => fs.readFileSync(path.join(sourceDir, name), 'utf8'))
-  .join('');
-
-fs.writeFileSync(target, source);
-require(target);
+console.log('Use presentation/slides.md for the maintained student deck.');
