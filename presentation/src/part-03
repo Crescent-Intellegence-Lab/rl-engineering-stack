@@ -1,0 +1,138 @@
+}
+
+// 11 Landscape matrix
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Where Do the Other Frameworks Fit?', 'A conceptual map: ease of adoption versus systems control and scale.');
+  // axes
+  s.addShape(SH.line, { x: 1.35, y: 6.0, w: 10.35, h: 0, line: { color: C.navy, width: 2, beginArrowType: 'none', endArrowType: 'triangle' } });
+  s.addShape(SH.line, { x: 1.35, y: 6.0, w: 0, h: -4.45, line: { color: C.navy, width: 2, beginArrowType: 'none', endArrowType: 'triangle' } });
+  s.addText('More systems control / scale', { x: 0.12, y: 1.2, w: 1.05, h: 2.15, fontSize: 11, bold: true, color: C.navy, rotate: 270, align: 'center', margin: 0 });
+  s.addText('Easier adoption / higher-level API', { x: 4.7, y: 6.22, w: 3.7, h: 0.24, fontSize: 11.2, bold: true, color: C.navy, align: 'center', margin: 0 });
+  // quadrants
+  s.addShape(SH.line,{x:6.55,y:1.55,w:0,h:4.45,line:{color:'DDE4EC',width:1,dash:'dash'}});
+  s.addShape(SH.line,{x:1.35,y:3.8,w:10.35,h:0,line:{color:'DDE4EC',width:1,dash:'dash'}});
+
+  const pts = [
+    {n:'LLaMA-Factory',x:3.15,y:5.2,c:C.blue},
+    {n:'TRL',x:4.35,y:4.65,c:C.orange},
+    {n:'ms-swift',x:5.75,y:4.15,c:C.green},
+    {n:'OpenRLHF',x:7.55,y:3.35,c:C.purple},
+    {n:'veRL',x:8.8,y:2.55,c:C.teal},
+    {n:'NeMo RL',x:10.3,y:2.05,c:C.navy2},
+    {n:'slime',x:9.85,y:3.5,c:C.red},
+    {n:'SkyRL / rLLM',x:7.2,y:1.95,c:C.orange},
+    {n:'AReaL',x:8.25,y:1.55,c:C.red}
+  ];
+  pts.forEach(p=>{
+    s.addShape(SH.ellipse,{x:p.x,y:p.y,w:0.22,h:0.22,fill:{color:p.c},line:{color:p.c}});
+    s.addText(p.n,{x:p.x+0.16,y:p.y-0.02,w:1.65,h:0.24,fontSize:10.5,bold:true,color:C.navy,margin:0});
+  });
+  s.addShape(SH.roundRect,{x:1.75,y:1.75,w:3.8,h:1.25,rectRadius:0.04,fill:{color:C.white},line:{color:C.line}});
+  s.addText('Interpretation', { x: 2.02, y: 2.0, w: 1.3, h: 0.26, fontSize: 17, bold: true, color: C.navy, margin: 0 });
+  s.addText('This is not a performance ranking. It positions each framework by its dominant abstraction and expected operational complexity.', { x: 2.02, y: 2.38, w: 3.25, h: 0.45, fontSize: 12.5, color: C.text, margin: 0 });
+  s.addShape(SH.roundRect,{x:8.85,y:4.65,w:3.15,h:0.95,rectRadius:0.04,fill:{color:C.orangeLight},line:{color:C.orange}});
+  s.addText('Pick the smallest stack that exposes the engineering question you actually need to study.', { x: 9.12, y: 4.9, w: 2.62, h: 0.42, fontSize: 13, bold: true, align:'center', color:C.navy, margin:0 });
+  addNotes(s, 'Explain that this map is conceptual, not empirical. LLaMA-Factory and TRL prioritize accessibility, while veRL, NeMo RL, and slime expose more systems control. Agent frameworks occupy a different direction because they add environment execution.');
+}
+
+// 12 Representative talk set
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'A Representative 25-Minute Presentation', 'Six case studies are enough to explain the evolution of the engineering stack.');
+  const items = [
+    {n:'Gymnasium',role:'Environment contract',time:'2 min',c:C.blue,f:C.blueLight},
+    {n:'CleanRL vs. SB3',role:'Implementation trade-off',time:'4 min',c:C.teal,f:C.tealLight},
+    {n:'RLlib',role:'Distributed classical RL',time:'3 min',c:C.purple,f:C.purpleLight},
+    {n:'TRL',role:'Trainer-first LLM post-training',time:'4 min',c:C.orange,f:C.orangeLight},
+    {n:'veRL',role:'System-first LLM RL',time:'5 min',c:C.green,f:C.greenLight},
+    {n:'AReaL',role:'Async / agentic frontier',time:'4 min',c:C.red,f:C.redLight}
+  ];
+  let y=1.55;
+  items.forEach((it,i)=>{
+    s.addShape(SH.roundRect,{x:0.8,y,w:8.5,h:0.72,rectRadius:0.03,fill:{color:i%2===0?'FFFFFF':'FAFBFD'},line:{color:C.line}});
+    s.addShape(SH.ellipse,{x:1.03,y:y+0.17,w:0.38,h:0.38,fill:{color:it.c},line:{color:it.c}});
+    s.addText(String(i+1),{x:1.03,y:y+0.26,w:0.38,h:0.15,fontSize:10.5,bold:true,color:C.white,align:'center',margin:0});
+    s.addText(it.n,{x:1.62,y:y+0.17,w:2.1,h:0.24,fontSize:16,bold:true,color:C.navy,margin:0});
+    s.addText(it.role,{x:3.85,y:y+0.19,w:3.4,h:0.22,fontSize:13.2,color:C.text,margin:0});
+    addPill(s,it.time,7.85,y+0.19,0.92,it.c,it.f);
+    y+=0.82;
+  });
+  addCard(s,9.65,1.55,3.1,4.87,{fill:C.white});
+  s.addText('Spend the remaining time on', { x: 9.98, y: 1.92, w: 2.42, h: 0.58, fontSize: 18.5, bold: true, color: C.navy, margin: 0 });
+  addBulletList(s,[
+    '2 min: scope and methodology',
+    '2 min: why LLM RL is different',
+    '2 min: framework positioning',
+    '2 min: takeaways and questions'
+  ],9.98,2.75,2.35,1.85,{fontSize:14.2,paraSpaceAfterPt:8});
+  s.addShape(SH.roundRect,{x:9.98,y:5.05,w:2.35,h:0.85,rectRadius:0.04,fill:{color:C.tealLight},line:{color:C.teal}});
+  s.addText('Keep the long framework list in backup slides or the repository.', { x: 10.18, y: 5.29, w: 1.95, h: 0.42, fontSize: 12, bold: true, align:'center', color:C.navy, margin:0 });
+  addNotes(s, 'This is the recommended pacing. It makes the talk coherent and honest: six representative tools, each selected because it introduces a new engineering abstraction. The rest belong in backup material.');
+}
+
+// 13 Takeaways and language
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Takeaways — and How to Present Tools You Have Not Used', 'Be precise about evidence and compare tools only within the same engineering layer.');
+  const ks = [
+    {x:0.55,n:'1',t:'Compare within a layer',d:'Gymnasium is not an algorithm library; vLLM is not an RL trainer.',c:C.blue,f:C.blueLight},
+    {x:4.4,n:'2',t:'Scale changes the bottleneck',d:'Correctness → reuse → distributed sampling → rollout → synchronization → agents.',c:C.teal,f:C.tealLight},
+    {x:8.25,n:'3',t:'Use evidence-aware language',d:'Say “the official architecture supports…” rather than “it is definitely faster.”',c:C.orange,f:C.orangeLight}
+  ];
+  ks.forEach(k=>{
+    addCard(s,k.x,1.55,3.53,2.3,{fill:k.f,line:k.c});
+    s.addShape(SH.ellipse,{x:k.x+0.25,y:1.82,w:0.55,h:0.55,fill:{color:k.c},line:{color:k.c}});
+    s.addText(k.n,{x:k.x+0.25,y:1.94,w:0.55,h:0.18,fontSize:13,bold:true,color:C.white,align:'center',margin:0});
+    s.addText(k.t,{x:k.x+0.98,y:1.86,w:2.1,h:0.3,fontSize:17,bold:true,color:C.navy,margin:0});
+    s.addText(k.d,{x:k.x+0.32,y:2.55,w:2.88,h:0.78,fontSize:13.5,color:C.text,align:'center',valign:'mid',margin:0.02});
+  });
+
+  addCard(s,0.55,4.25,12.23,1.92,{fill:C.white});
+  s.addText('Recommended phrasing', { x: 0.92, y: 4.56, w: 2.2, h: 0.32, fontSize: 20, bold: true, color: C.navy, margin: 0 });
+  s.addShape(SH.roundRect,{x:0.92,y:5.08,w:5.38,h:0.67,rectRadius:0.03,fill:{color:C.greenLight},line:{color:C.green}});
+  s.addText('“I use veRL as a representative example of a flexible distributed LLM RL architecture, based on its official backends and worker model.”', { x: 1.18, y: 5.22, w: 4.86, h: 0.37, fontSize: 12.6, bold: true, color: C.navy, align:'center', margin:0 });
+  s.addShape(SH.roundRect,{x:6.58,y:5.08,w:5.62,h:0.67,rectRadius:0.03,fill:{color:C.redLight},line:{color:C.red}});
+  s.addText('Avoid: “veRL is faster than OpenRLHF” without a controlled benchmark on the same model, hardware, and configuration.', { x: 6.85, y: 5.22, w: 5.08, h: 0.37, fontSize: 12.6, bold: true, color: C.navy, align:'center', margin:0 });
+  s.addText('Final recommendation: present six representative tools, label evidence levels, and keep the full landscape in the GitHub repository.', { x: 1.35, y: 6.5, w: 10.65, h: 0.34, fontSize: 16.5, bold: true, align: 'center', color: C.navy, margin: 0 });
+  addNotes(s, 'Close by reinforcing the method, not the catalog. The strongest answer to “Have you used all of these?” is a transparent evidence boundary and carefully qualified claims.');
+}
+
+// 14 References
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Primary Sources', 'Official documentation and project repositories used for the representative cases.');
+  const refs = [
+    ['Gymnasium', 'https://gymnasium.farama.org/', 'Environment API, spaces, wrappers, vectorization'],
+    ['CleanRL', 'https://docs.cleanrl.dev/', 'Single-file, research-friendly implementations'],
+    ['Stable-Baselines3', 'https://stable-baselines3.readthedocs.io/en/master/', 'Reliable PyTorch implementations and unified API'],
+    ['Ray RLlib', 'https://docs.ray.io/en/latest/rllib/index.html', 'Scalable distributed reinforcement learning'],
+    ['Hugging Face TRL', 'https://huggingface.co/docs/trl/index', 'SFT, preference optimization, reward modeling, and online RL'],
+    ['veRL', 'https://github.com/verl-project/verl', 'Flexible distributed RL post-training for LLMs'],
+    ['OpenRLHF', 'https://github.com/OpenRLHF/OpenRLHF', 'Ray + vLLM + DeepSpeed agentic RL framework'],
+    ['AReaL', 'https://github.com/areal-project/AReaL', 'Fully asynchronous agentic RL']
+  ];
+  let y=1.45;
+  refs.forEach((r,i)=>{
+    s.addShape(SH.roundRect,{x:0.65,y,w:12.0,h:0.58,rectRadius:0.02,fill:{color:i%2===0?'FFFFFF':'F2F5F9'},line:{color:'E2E8F0'}});
+    s.addText(r[0],{x:0.9,y:y+0.13,w:1.75,h:0.2,fontSize:13.3,bold:true,color:C.navy,margin:0});
+    s.addText(r[2],{x:2.75,y:y+0.13,w:4.95,h:0.2,fontSize:11.6,color:C.text,margin:0});
+    s.addText([{text:r[1],options:{hyperlink:{url:r[1]},color:C.blue,underline:{color:C.blue}}}],{x:7.9,y:y+0.13,w:4.35,h:0.2,fontSize:10.3,margin:0});
+    y+=0.66;
+  });
+  s.addShape(SH.roundRect,{x:1.3,y:6.88,w:10.7,h:0.28,rectRadius:0.02,fill:{color:C.navy},line:{color:C.navy}});
+  s.addText('Framework capabilities change rapidly. Pin the exact release and verify the documentation used in the experiment.', { x: 1.55, y: 6.95, w: 10.2, h: 0.14, fontSize: 9.5, bold: true, color: C.white, align:'center', margin:0 });
+  addNotes(s, 'Keep this slide available for questions. The links are clickable in PowerPoint. Emphasize that all framework descriptions in the main talk are grounded in primary sources.');
+}
+
+async function main() {
+  const output = path.resolve(__dirname, '..', 'rl-engineering-tools-landscape.pptx');
+  fs.mkdirSync(path.dirname(output), { recursive: true });
+  await pptx.writeFile({ fileName: output });
+  console.log(`Wrote ${output}`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});
