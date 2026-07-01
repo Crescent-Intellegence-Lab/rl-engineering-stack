@@ -1,67 +1,50 @@
-# Presentation
+# Student Presentation
 
-## RL Engineering Tools: From Classical RL to LLM and Agentic RL
+## RL Engineering Tools: From Classical RL to LLM Agents
 
-This directory contains an English presentation designed for a 25–30 minute advisor or lab report.
+This directory contains a student-facing English presentation that explains how reinforcement-learning tools fit together, what problem each layer solves, and how engineering bottlenecks change from classical RL to LLM and agentic RL.
 
-### Available now
+## Files
 
-- [`slides.md`](slides.md) — GitHub-native Marp slide deck; readable and editable directly in the repository.
-- [`presenter-guide.md`](presenter-guide.md) — slide-by-slide talking points and evidence boundaries.
-- [`src/build.js`](src/build.js) — assembles the maintained source parts and generates the PowerPoint.
-- [`src/part-00`](src/part-00), [`part-01`](src/part-01), [`part-02`](src/part-02), and [`part-03`](src/part-03) — maintained PptxGenJS source segments.
+- [`slides.md`](slides.md) — GitHub-readable Marp slide deck.
+- [`rl-engineering-tools-student-facing.pdf`](rl-engineering-tools-student-facing.pdf) — browser-friendly PDF export.
+- [`montage.png`](montage.png) — one-page visual preview of all slides.
+- [`student-study-guide.md`](student-study-guide.md) — review notes for students.
+- `rl-engineering-tools-student-facing.pptx` — editable PowerPoint; upload this file manually after downloading it from the accompanying ChatGPT response.
 
-### Generated outputs
+## Learning objectives
 
-The following files are generated outputs and appear only after the build completes successfully:
+After the presentation, students should be able to:
 
-- `rl-engineering-tools-landscape.pptx` — editable PowerPoint deck with speaker notes.
-- `rl-engineering-tools-landscape.pdf` — browser-friendly PDF export, when produced by the selected rendering path.
+1. describe the standard environment–policy–collector–learner loop;
+2. distinguish environment APIs from algorithm libraries and distributed runtimes;
+3. explain the design trade-off between CleanRL and Stable-Baselines3;
+4. identify when RLlib-style distributed execution becomes useful;
+5. distinguish offline preference optimization from online LLM reinforcement learning;
+6. explain the roles of TRL, veRL, OpenRLHF, rollout engines, and training backends;
+7. understand why agentic workloads motivate asynchronous RL systems.
 
-GitHub does not generally render PowerPoint files as an interactive presentation in the repository page. Once the `.pptx` exists, download the raw file and open it in PowerPoint, LibreOffice Impress, or another compatible application. Use the PDF or `slides.md` for browser-based review.
+## Slide sequence
 
-### Presentation strategy
+1. Why RL engineering tools exist
+2. The classical RL stack
+3. Gymnasium and environment standardization
+4. CleanRL versus Stable-Baselines3
+5. RLlib and distributed classical RL
+6. Why LLM RL changes the systems problem
+7. Offline preference optimization versus online RL
+8. TRL as an accessible entry point
+9. veRL and OpenRLHF as distributed LLM RL systems
+10. Rollout engines and training backends
+11. Agentic and asynchronous RL
+12. Choosing an appropriate stack
+13. Key takeaways
 
-The deck does not try to present every framework. It uses six representative tools to explain how the engineering bottleneck changes across the stack:
-
-1. **Gymnasium** — environment interface.
-2. **CleanRL vs. Stable-Baselines3** — transparency versus reusable reliability.
-3. **RLlib** — distributed classical reinforcement learning.
-4. **TRL** — trainer-first LLM post-training.
-5. **veRL** — system-first distributed LLM reinforcement learning.
-6. **AReaL** — asynchronous and agentic reinforcement learning.
-
-Other projects are positioned on a landscape slide and remain documented in the main repository.
-
-### Evidence boundary
-
-The deck is based primarily on:
-
-- official documentation;
-- official project repositories;
-- supported algorithms and execution backends;
-- source organization and public examples;
-- architecture-level comparison.
-
-It does **not** claim a controlled identical-hardware benchmark across all frameworks.
-
-### Rendering the Marp deck
-
-The `slides.md` file can be opened with the Marp extension for Visual Studio Code or rendered with Marp CLI.
+## Render the Marp deck
 
 ```bash
 npx @marp-team/marp-cli slides.md --pptx
 npx @marp-team/marp-cli slides.md --pdf
 ```
 
-### Regenerating the PptxGenJS deck
-
-Install Node.js and run:
-
-```bash
-cd presentation
-npm install
-npm run build
-```
-
-The repository includes a GitHub Actions workflow. For it to commit the generated PowerPoint, repository or organization settings must allow GitHub Actions and grant the workflow read/write access to repository contents.
+The editable PptxGenJS PowerPoint is provided separately for manual upload so that the repository does not contain a broken generated-file link.
