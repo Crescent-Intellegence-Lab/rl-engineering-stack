@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900" role="img" aria-labelledby="title desc">
+  <title id="title">RL Engineering Tools student presentation overview</title>
+  <desc id="desc">A grid showing the fourteen slide titles in the student-facing presentation.</desc>
+  <style>
+    .bg { fill: #f7f9fc; }
+    .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; rx: 16; }
+    .num { fill: #0ea5a3; }
+    .ntext { font: 700 18px Arial, sans-serif; fill: #ffffff; }
+    .title { font: 700 28px Arial, sans-serif; fill: #0b1f33; }
+    .slide { font: 700 17px Arial, sans-serif; fill: #172033; }
+    .sub { font: 14px Arial, sans-serif; fill: #64748b; }
+  </style>
+  <rect width="1400" height="900" class="bg"/>
+  <text x="700" y="48" text-anchor="middle" class="title">RL Engineering Tools — Student Deck</text>
+  <text x="700" y="76" text-anchor="middle" class="sub">From classical RL foundations to LLM and agentic RL systems</text>
+
+  <g transform="translate(45,115)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">1</text><text x="25" y="82" class="slide">RL Engineering Tools</text><text x="25" y="112" class="sub">Course map and scope</text>
+  </g>
+  <g transform="translate(380,115)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">2</text><text x="25" y="82" class="slide">Why Do RL Tools Exist?</text><text x="25" y="112" class="sub">The data-producing loop</text>
+  </g>
+  <g transform="translate(715,115)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">3</text><text x="25" y="82" class="slide">Classical RL Stack</text><text x="25" y="112" class="sub">On-policy and off-policy</text>
+  </g>
+  <g transform="translate(1050,115)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">4</text><text x="25" y="82" class="slide">Gymnasium</text><text x="25" y="112" class="sub">Environment standardization</text>
+  </g>
+
+  <g transform="translate(45,290)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">5</text><text x="25" y="82" class="slide">CleanRL vs. SB3</text><text x="25" y="112" class="sub">Transparency versus reuse</text>
+  </g>
+  <g transform="translate(380,290)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">6</text><text x="25" y="82" class="slide">RLlib</text><text x="25" y="112" class="sub">Distributed classical RL</text>
+  </g>
+  <g transform="translate(715,290)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">7</text><text x="25" y="82" class="slide">Why LLM RL Is Different</text><text x="25" y="112" class="sub">New systems bottlenecks</text>
+  </g>
+  <g transform="translate(1050,290)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">8</text><text x="25" y="82" class="slide">Post-Training Methods</text><text x="25" y="112" class="sub">Offline versus online</text>
+  </g>
+
+  <g transform="translate(45,465)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">9</text><text x="25" y="82" class="slide">TRL</text><text x="25" y="112" class="sub">Accessible LLM post-training</text>
+  </g>
+  <g transform="translate(380,465)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">10</text><text x="25" y="82" class="slide">veRL and OpenRLHF</text><text x="25" y="112" class="sub">Distributed LLM RL systems</text>
+  </g>
+  <g transform="translate(715,465)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">11</text><text x="25" y="82" class="slide">Rollout and Training</text><text x="25" y="112" class="sub">vLLM, SGLang, FSDP, ZeRO</text>
+  </g>
+  <g transform="translate(1050,465)">
+    <rect width="310" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">12</text><text x="25" y="82" class="slide">Agentic and Async RL</text><text x="25" y="112" class="sub">AReaL and policy staleness</text>
+  </g>
+
+  <g transform="translate(212,640)">
+    <rect width="450" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">13</text><text x="25" y="82" class="slide">How Students Choose a Stack</text><text x="25" y="112" class="sub">Start from the bottleneck and project goal</text>
+  </g>
+  <g transform="translate(738,640)">
+    <rect width="450" height="150" class="card"/><circle cx="32" cy="32" r="20" class="num"/><text x="32" y="38" text-anchor="middle" class="ntext">14</text><text x="25" y="82" class="slide">Key Takeaways</text><text x="25" y="112" class="sub">Layers, scale, and evidence</text>
+  </g>
+</svg>
