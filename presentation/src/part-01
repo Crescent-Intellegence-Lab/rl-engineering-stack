@@ -1,0 +1,160 @@
+  s.addText('Recommended evidence labels', { x: 9.48, y: 1.95, w: 2.95, h: 0.34, fontSize: 19, bold: true, color: C.navy, margin: 0 });
+  const tags = [
+    ['Hands-on', C.green, C.greenLight, 'Executed or reproduced locally'],
+    ['Source-reviewed', C.blue, C.blueLight, 'Docs + code organization reviewed'],
+    ['Mention-only', C.muted, 'EEF2F6', 'Included for positioning only']
+  ];
+  let yy = 2.55;
+  tags.forEach(t => {
+    addPill(s, t[0], 9.48, yy, 1.35, t[1], t[2]);
+    s.addText(t[3], { x: 10.95, y: yy+0.04, w: 1.45, h: 0.22, fontSize: 11.2, color: C.text, margin: 0 });
+    yy += 0.86;
+  });
+  s.addShape(SH.roundRect, { x: 9.48, y: 5.18, w: 2.95, h: 0.78, rectRadius: 0.04, fill: { color: C.tealLight }, line: { color: C.teal } });
+  s.addText('The report is strongest when the evidence level is explicit.', { x: 9.7, y: 5.36, w: 2.5, h: 0.36, fontSize: 12.5, bold: true, align: 'center', color: C.navy, margin: 0 });
+  addSource(s, 'Basis: official documentation and project repositories, reviewed July 2026.');
+  addNotes(s, 'This slide addresses the concern that not every tool has been used hands-on. State the boundary explicitly. The report compares architectures and intended use cases, while avoiding unsupported performance claims.');
+}
+
+// 3 Stack layers
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'One RL Stack, Multiple Engineering Layers', 'The tools are complementary because they operate at different levels.');
+  const boxes = [
+    {t:'Environment API', p:'Gymnasium', c:C.blue, f:C.blueLight},
+    {t:'Algorithm Implementation', p:'CleanRL / SB3', c:C.teal, f:C.tealLight},
+    {t:'Distributed Execution', p:'RLlib', c:C.purple, f:C.purpleLight},
+    {t:'LLM Post-training', p:'TRL', c:C.orange, f:C.orangeLight},
+    {t:'Distributed LLM RL', p:'veRL', c:C.green, f:C.greenLight},
+    {t:'Async / Agentic RL', p:'AReaL', c:C.red, f:C.redLight}
+  ];
+  let x = 0.58;
+  boxes.forEach((b,i) => {
+    s.addShape(SH.roundRect, { x, y: 2.15, w: 1.82, h: 2.12, rectRadius: 0.05, fill: { color: b.f }, line: { color: b.c, width: 1.6 } });
+    s.addShape(SH.ellipse, { x: x+0.63, y: 2.39, w: 0.56, h: 0.56, fill: { color: b.c }, line: { color: b.c } });
+    s.addText(String(i+1), { x: x+0.63, y: 2.49, w: 0.56, h: 0.22, align: 'center', fontSize: 13, bold: true, color: C.white, margin: 0 });
+    s.addText(b.t, { x: x+0.12, y: 3.08, w: 1.58, h: 0.45, fontSize: 15, bold: true, align: 'center', color: C.navy, margin: 0 });
+    s.addText(b.p, { x: x+0.12, y: 3.63, w: 1.58, h: 0.28, fontSize: 13.5, bold: true, align: 'center', color: b.c, margin: 0 });
+    if (i < boxes.length-1) addArrow(s, x+1.86, 3.2, x+2.15, 3.2, C.muted, 1.8);
+    x += 2.12;
+  });
+  s.addShape(SH.roundRect, { x: 1.05, y: 4.88, w: 11.25, h: 1.15, rectRadius: 0.04, fill: { color: C.navy }, line: { color: C.navy } });
+  s.addText('As scale increases, the main bottleneck moves from algorithm correctness to rollout throughput, model placement, weight synchronization, and environment execution.', { x: 1.35, y: 5.18, w: 10.65, h: 0.52, fontSize: 18, bold: true, align: 'center', color: C.white, margin: 0 });
+  addNotes(s, 'Use this as the organizing map for the rest of the talk. Emphasize that Gymnasium is not competing with TRL, and vLLM is not competing with PPO. Each tool addresses a different layer.');
+}
+
+// 4 Gymnasium
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 1: Gymnasium', 'Gymnasium standardizes interaction — not learning.');
+  addPill(s, 'ENVIRONMENT API', 0.55, 1.2, 1.55, C.blue, C.blueLight);
+  addCard(s, 0.55, 1.62, 5.15, 4.85, { fill: C.navy });
+  s.addText('observation, info = env.reset()\n\nobservation, reward,\nterminated, truncated, info =\n    env.step(action)', { x: 0.95, y: 2.18, w: 4.35, h: 2.0, fontFace: 'Courier New', fontSize: 20, color: 'EAF2FA', margin: 0.05, breakLine: false });
+  s.addShape(SH.line, { x: 0.95, y: 4.48, w: 4.3, h: 0, line: { color: '42617E', width: 1 } });
+  s.addText('Common contract across classic control, Atari, MuJoCo, and custom environments', { x: 0.95, y: 4.78, w: 4.25, h: 0.78, fontSize: 15.5, color: 'B8CADB', margin: 0 });
+
+  addCard(s, 6.02, 1.62, 3.12, 4.85, { fill: C.white });
+  s.addText('Standardizes', { x: 6.34, y: 1.94, w: 2.45, h: 0.3, fontSize: 19, bold: true, color: C.green, margin: 0 });
+  addBulletList(s, [
+    'reset() and step()',
+    'Action and observation spaces',
+    'Termination vs. truncation',
+    'Wrappers and vectorization',
+    'Environment registration'
+  ], 6.35, 2.45, 2.45, 2.75, { fontSize: 15.2, color: C.text, paraSpaceAfterPt: 8 });
+
+  addCard(s, 9.42, 1.62, 3.35, 4.85, { fill: C.white });
+  s.addText('Does not provide', { x: 9.74, y: 1.94, w: 2.7, h: 0.3, fontSize: 19, bold: true, color: C.red, margin: 0 });
+  addBulletList(s, [
+    'PPO, DQN, or SAC training',
+    'Replay buffers',
+    'Advantage estimation',
+    'Distributed learners',
+    'LLM rollout orchestration'
+  ], 9.75, 2.45, 2.62, 2.75, { fontSize: 15.2, color: C.text, paraSpaceAfterPt: 8 });
+  s.addText('Takeaway: environment standardization enables interoperability across algorithm libraries.', { x: 6.36, y: 5.63, w: 5.98, h: 0.42, fontSize: 15.5, bold: true, color: C.navy, margin: 0 });
+  addSource(s, 'Source: Gymnasium official documentation — API, spaces, wrappers, and Sync/Async vector environments.');
+  addNotes(s, 'Do not spend time listing environments. The point is architectural: Gymnasium creates a stable interaction contract so algorithms can be reused. It does not implement learning.');
+}
+
+// 5 CleanRL vs SB3
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 2: CleanRL vs. Stable-Baselines3', 'Two valid implementation philosophies: transparency versus reusable reliability.');
+  addCard(s, 0.55, 1.5, 5.85, 4.85, { fill: C.white, line: 'B8E4E1' });
+  addPill(s, 'TRANSPARENCY', 0.88, 1.82, 1.45, C.teal, C.tealLight);
+  s.addText('CleanRL', { x: 0.88, y: 2.28, w: 2.3, h: 0.4, fontSize: 25, bold: true, color: C.navy, margin: 0 });
+  s.addText('One complete algorithm variant per file', { x: 0.88, y: 2.72, w: 4.8, h: 0.3, fontSize: 14, color: C.muted, margin: 0 });
+  s.addShape(SH.roundRect, { x: 0.88, y: 3.25, w: 4.95, h: 1.1, rectRadius: 0.03, fill: { color: C.navy }, line: { color: C.navy } });
+  s.addText('env loop → rollout → GAE → minibatches\n→ PPO loss → optimizer step', { x: 1.12, y: 3.52, w: 4.47, h: 0.52, fontFace: 'Courier New', fontSize: 16, color: 'EAF2FA', align: 'center', margin: 0 });
+  addBulletList(s, [
+    'Easy to audit the full execution path',
+    'Excellent for modifying paper implementations',
+    'Accepts duplicate code to reduce abstraction'
+  ], 0.92, 4.73, 4.95, 1.2, { fontSize: 14.5, paraSpaceAfterPt: 6 });
+
+  addCard(s, 6.92, 1.5, 5.85, 4.85, { fill: C.white, line: 'C7D8FA' });
+  addPill(s, 'REUSE', 7.25, 1.82, 0.92, C.blue, C.blueLight);
+  s.addText('Stable-Baselines3', { x: 7.25, y: 2.28, w: 3.5, h: 0.4, fontSize: 25, bold: true, color: C.navy, margin: 0 });
+  s.addText('Unified PyTorch API with tested implementations', { x: 7.25, y: 2.72, w: 4.85, h: 0.3, fontSize: 14, color: C.muted, margin: 0 });
+  s.addShape(SH.roundRect, { x: 7.25, y: 3.25, w: 4.95, h: 1.1, rectRadius: 0.03, fill: { color: C.navy }, line: { color: C.navy } });
+  s.addText('model = PPO("MlpPolicy", env)\nmodel.learn(total_timesteps=100_000)', { x: 7.49, y: 3.49, w: 4.47, h: 0.58, fontFace: 'Courier New', fontSize: 15.5, color: 'EAF2FA', align: 'center', margin: 0 });
+  addBulletList(s, [
+    'Fast path to a trustworthy baseline',
+    'Testing, callbacks, evaluation, logging',
+    'Core execution is hidden behind abstractions'
+  ], 7.29, 4.73, 4.95, 1.2, { fontSize: 14.5, paraSpaceAfterPt: 6 });
+
+  s.addShape(SH.line, { x: 2.0, y: 6.55, w: 9.2, h: 0, line: { color: C.line, width: 5, beginArrowType: 'none', endArrowType: 'none' } });
+  s.addShape(SH.ellipse, { x: 2.05, y: 6.41, w: 0.28, h: 0.28, fill: { color: C.teal }, line: { color: C.teal } });
+  s.addShape(SH.ellipse, { x: 10.88, y: 6.41, w: 0.28, h: 0.28, fill: { color: C.blue }, line: { color: C.blue } });
+  s.addText('Readable implementation', { x: 1.28, y: 6.78, w: 2.0, h: 0.18, align: 'center', fontSize: 9.5, color: C.muted, margin: 0 });
+  s.addText('Reusable library', { x: 9.9, y: 6.78, w: 2.2, h: 0.18, align: 'center', fontSize: 9.5, color: C.muted, margin: 0 });
+  addSource(s, 'Sources: CleanRL official documentation; Stable-Baselines3 2.9 documentation.');
+  addNotes(s, 'Present these as design trade-offs, not a winner/loser comparison. CleanRL is best when implementation details are the object of study; SB3 is best when the goal is a reliable baseline with minimal engineering.');
+}
+
+// 6 RLlib
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 3: RLlib', 'Distributed RL becomes necessary when sampling and resource orchestration dominate.');
+  addPill(s, 'DISTRIBUTED CLASSICAL RL', 0.55, 1.18, 1.85, C.purple, C.purpleLight);
+
+  addCard(s, 0.55, 1.63, 8.15, 4.8, { fill: C.white });
+  // env runners
+  s.addText('Environment runners', { x: 0.9, y: 1.95, w: 2.2, h: 0.3, fontSize: 18, bold: true, color: C.navy, margin: 0 });
+  for (let i=0;i<4;i++) {
+    s.addShape(SH.roundRect, { x: 0.9, y: 2.48+i*0.78, w: 2.25, h: 0.52, rectRadius: 0.03, fill: { color: C.blueLight }, line: { color: C.blue } });
+    s.addText(`Runner ${i+1}  ·  vector envs`, { x: 1.05, y: 2.63+i*0.78, w: 1.95, h: 0.18, fontSize: 11.5, bold: true, align: 'center', color: C.navy, margin: 0 });
+  }
+  addArrow(s, 3.25, 3.63, 4.15, 3.63, C.purple, 2.2);
+  s.addShape(SH.roundRect, { x: 4.18, y: 2.58, w: 1.45, h: 2.1, rectRadius: 0.04, fill: { color: C.purpleLight }, line: { color: C.purple, width: 1.5 } });
+  s.addText('Sample\nstream', { x: 4.4, y: 3.2, w: 1.0, h: 0.75, fontSize: 18, bold: true, align: 'center', color: C.purple, margin: 0 });
+  addArrow(s, 5.7, 3.63, 6.45, 3.63, C.purple, 2.2);
+  s.addShape(SH.roundRect, { x: 6.48, y: 2.55, w: 1.72, h: 2.15, rectRadius: 0.04, fill: { color: C.tealLight }, line: { color: C.teal, width: 1.5 } });
+  s.addText('Learner\ngroup', { x: 6.73, y: 3.19, w: 1.22, h: 0.75, fontSize: 18, bold: true, align: 'center', color: C.teal, margin: 0 });
+  s.addText('Ray manages placement, workers, fault handling, and scale.', { x: 1.05, y: 5.85, w: 7.2, h: 0.3, fontSize: 14.5, bold: true, color: C.navy, align: 'center', margin: 0 });
+
+  addCard(s, 9.0, 1.63, 3.78, 4.8, { fill: C.white });
+  s.addText('Use RLlib when', { x: 9.34, y: 1.98, w: 3.05, h: 0.32, fontSize: 20, bold: true, color: C.navy, margin: 0 });
+  addBulletList(s, [
+    'Many environments or multiple nodes',
+    'Multi-agent training is central',
+    'Fault tolerance matters',
+    'Ray is already in the stack',
+    'Distributed evaluation is required'
+  ], 9.33, 2.48, 3.0, 2.55, { fontSize: 14.8, paraSpaceAfterPt: 8 });
+  s.addShape(SH.roundRect, { x: 9.35, y: 5.25, w: 2.98, h: 0.72, rectRadius: 0.03, fill: { color: C.orangeLight }, line: { color: C.orange } });
+  s.addText('Do not pay the complexity cost for a small single-process baseline.', { x: 9.58, y: 5.43, w: 2.52, h: 0.32, fontSize: 11.8, bold: true, align: 'center', color: C.navy, margin: 0 });
+  addSource(s, 'Source: Ray RLlib 2.56 documentation — industry-grade, scalable RL with environment runners and learners.');
+  addNotes(s, 'The contribution of RLlib is not a new PPO objective. It is a scalable execution architecture. Explain that the trade-off is more configuration and deeper abstractions, which are justified only when distributed sampling or multi-agent execution is real.');
+}
+
+// 7 Classical vs LLM
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Why LLM RL Needs a Different Stack', 'The action is now a long token sequence and the policy may contain billions of parameters.');
+  addCard(s, 0.55, 1.48, 5.72, 4.95, { fill: C.white, line: 'C7D8FA' });
+  addPill(s, 'CLASSICAL RL', 0.87, 1.8, 1.25, C.blue, C.blueLight);
+  const left = [
+    ['Observation', 'Small tensor or state'],
