@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use this guide, please cite it using the metadata below."
+type: software
+title: "Reinforcement Learning Engineering Stack"
+authors:
+  - family-names: "Yan"
+    given-names: "Shuo"
+version: 1.0.0
+date-released: 2026-06-30
+license: CC-BY-4.0
+abstract: >-
+  A practical guide to classical reinforcement learning libraries,
+  distributed RL infrastructure, LLM post-training frameworks,
+  reinforcement learning with verifiable rewards, and agentic RL systems.
+keywords:
+  - reinforcement learning
+  - distributed systems
+  - RLHF
+  - RLVR
+  - LLM post-training
+  - agentic reinforcement learning
