@@ -1,0 +1,160 @@
+    ['Action', 'Discrete / low-dimensional'],
+    ['Step latency', 'Often milliseconds'],
+    ['Policy size', 'Usually modest'],
+    ['Data path', 'Environment → buffer → learner']
+  ];
+  let yy = 2.45;
+  left.forEach(([k,v]) => {
+    s.addText(k, { x: 0.9, y: yy, w: 1.35, h: 0.24, fontSize: 13, bold: true, color: C.muted, margin: 0 });
+    s.addText(v, { x: 2.25, y: yy, w: 3.5, h: 0.24, fontSize: 14.5, bold: true, color: C.navy, margin: 0 });
+    s.addShape(SH.line, { x: 0.9, y: yy+0.38, w: 4.9, h: 0, line: { color: 'E4EAF1', width: 1 } });
+    yy += 0.72;
+  });
+
+  addCard(s, 7.06, 1.48, 5.72, 4.95, { fill: C.white, line: 'F3D59C' });
+  addPill(s, 'LLM RL', 7.38, 1.8, 0.92, C.orange, C.orangeLight);
+  const right = [
+    ['Observation', 'Prompt + conversation history'],
+    ['Action', 'Hundreds or thousands of tokens'],
+    ['Rollout latency', 'Seconds, tools, or external jobs'],
+    ['Policy size', 'Billions of parameters'],
+    ['Data path', 'Rollout → verifier → trainer → sync']
+  ];
+  yy = 2.45;
+  right.forEach(([k,v]) => {
+    s.addText(k, { x: 7.4, y: yy, w: 1.45, h: 0.24, fontSize: 13, bold: true, color: C.muted, margin: 0 });
+    s.addText(v, { x: 8.86, y: yy, w: 3.45, h: 0.24, fontSize: 14.3, bold: true, color: C.navy, margin: 0 });
+    s.addShape(SH.line, { x: 7.4, y: yy+0.38, w: 4.9, h: 0, line: { color: 'E4EAF1', width: 1 } });
+    yy += 0.72;
+  });
+
+  addArrow(s, 6.33, 3.72, 6.95, 3.72, C.orange, 3);
+  s.addShape(SH.roundRect, { x: 2.05, y: 6.56, w: 9.2, h: 0.44, rectRadius: 0.02, fill: { color: C.navy }, line: { color: C.navy } });
+  s.addText('Bottleneck shift: environment stepping → generation → placement → weight synchronization → agent execution', { x: 2.25, y: 6.68, w: 8.8, h: 0.2, fontSize: 13, bold: true, color: C.white, align: 'center', margin: 0 });
+  addNotes(s, 'This is the pivot slide. Explain that LLM RL is not just classical PPO applied to a transformer. The systems architecture changes because rollout generation, multiple models, distributed layouts, and long trajectories dominate.');
+}
+
+// 8 TRL
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 4: Hugging Face TRL', 'Trainer-first post-training: the lowest-friction entry into modern LLM alignment.');
+  addPill(s, 'TRAINER-FIRST', 0.55, 1.2, 1.25, C.orange, C.orangeLight);
+  addCard(s, 0.55, 1.62, 8.25, 4.8, { fill: C.white });
+  const cols = [
+    {x:0.9, t:'Offline methods', c:C.blue, f:C.blueLight, items:['SFTTrainer','DPOTrainer','KTO / ORPO']},
+    {x:3.55, t:'Reward modeling', c:C.purple, f:C.purpleLight, items:['RewardTrainer','PRMTrainer','Custom reward functions']},
+    {x:6.2, t:'Online methods', c:C.orange, f:C.orangeLight, items:['GRPOTrainer','RLOOTrainer','PPO / Online DPO']}
+  ];
+  cols.forEach(col => {
+    s.addShape(SH.roundRect, { x: col.x, y: 2.12, w: 2.25, h: 3.45, rectRadius: 0.04, fill: { color: col.f }, line: { color: col.c, width: 1.4 } });
+    s.addText(col.t, { x: col.x+0.15, y: 2.42, w: 1.95, h: 0.34, fontSize: 17, bold: true, align: 'center', color: C.navy, margin: 0 });
+    let y2 = 3.17;
+    col.items.forEach(it => {
+      s.addShape(SH.roundRect, { x: col.x+0.25, y: y2, w: 1.75, h: 0.48, rectRadius: 0.03, fill: { color: C.white }, line: { color: col.c } });
+      s.addText(it, { x: col.x+0.34, y: y2+0.14, w: 1.57, h: 0.18, fontSize: 11.2, bold: true, align: 'center', color: C.navy, margin: 0 });
+      y2 += 0.72;
+    });
+  });
+
+  addCard(s, 9.08, 1.62, 3.7, 4.8, { fill: C.white });
+  s.addText('Why TRL is representative', { x: 9.4, y: 1.96, w: 3.05, h: 0.36, fontSize: 19, bold: true, color: C.navy, margin: 0 });
+  addBulletList(s, [
+    'Native Transformers ecosystem',
+    'Trainer-style API',
+    'PEFT and DeepSpeed integrations',
+    'vLLM support for several online methods',
+    'Easy reward-function prototyping'
+  ], 9.42, 2.49, 2.95, 2.5, { fontSize: 14.2, paraSpaceAfterPt: 8 });
+  s.addShape(SH.roundRect, { x: 9.42, y: 5.28, w: 2.93, h: 0.72, rectRadius: 0.03, fill: { color: C.redLight }, line: { color: C.red } });
+  s.addText('Limit: not primarily designed for the most complex multi-model cluster orchestration.', { x: 9.66, y: 5.43, w: 2.45, h: 0.4, fontSize: 11.5, bold: true, align: 'center', color: C.navy, margin: 0 });
+  addSource(s, 'Source: TRL v1 documentation — SFT, DPO, reward modeling, GRPO, RLOO, PPO, vLLM, and agent-environment integrations.');
+  addNotes(s, 'Frame TRL as the entry point, not the endpoint for all scales. It is ideal when the research question is the objective, reward function, or dataset rather than cluster scheduling.');
+}
+
+// 9 veRL
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 5: veRL', 'System-first LLM RL: separate the RL dataflow from concrete distributed execution.');
+  addPill(s, 'DISTRIBUTED LLM RL', 0.55, 1.18, 1.55, C.green, C.greenLight);
+  addCard(s, 0.55, 1.58, 8.65, 4.9, { fill: C.white });
+  s.addShape(SH.roundRect, { x: 0.95, y: 1.98, w: 7.85, h: 0.62, rectRadius: 0.03, fill: { color: C.navy }, line: { color: C.navy } });
+  s.addText('Hybrid controller / RL dataflow', { x: 1.1, y: 2.17, w: 7.55, h: 0.22, fontSize: 17, bold: true, align: 'center', color: C.white, margin: 0 });
+
+  const workers = [
+    {x:0.95,t:'Actor',c:C.blue,f:C.blueLight},
+    {x:2.55,t:'Reference',c:C.purple,f:C.purpleLight},
+    {x:4.15,t:'Critic',c:C.orange,f:C.orangeLight},
+    {x:5.75,t:'Reward / Verifier',c:C.green,f:C.greenLight},
+    {x:7.35,t:'Rollout',c:C.teal,f:C.tealLight}
+  ];
+  workers.forEach(w => {
+    s.addShape(SH.roundRect, { x:w.x, y:3.04, w:1.35, h:0.78, rectRadius:0.03, fill:{color:w.f}, line:{color:w.c, width:1.2} });
+    s.addText(w.t, { x:w.x+0.08, y:3.26, w:1.19, h:0.3, fontSize:12.5, bold:true, align:'center', color:C.navy, margin:0 });
+    addArrow(s, w.x+0.68, 2.63, w.x+0.68, 3.0, w.c, 1.5);
+  });
+
+  s.addText('Training backends', { x: 1.0, y: 4.42, w: 2.1, h: 0.26, fontSize: 15.5, bold: true, color: C.navy, margin: 0 });
+  addPill(s, 'FSDP / FSDP2', 1.0, 4.86, 1.45, C.blue, C.blueLight);
+  addPill(s, 'Megatron-LM', 2.65, 4.86, 1.4, C.purple, C.purpleLight);
+  s.addText('Rollout backends', { x: 5.15, y: 4.42, w: 2.1, h: 0.26, fontSize: 15.5, bold: true, color: C.navy, margin: 0 });
+  addPill(s, 'vLLM', 5.15, 4.86, 0.92, C.teal, C.tealLight);
+  addPill(s, 'SGLang', 6.24, 4.86, 1.02, C.orange, C.orangeLight);
+  addPill(s, 'Transformers', 7.44, 4.86, 1.2, C.green, C.greenLight);
+
+  s.addShape(SH.roundRect, { x: 1.02, y: 5.6, w: 7.65, h: 0.48, rectRadius: 0.02, fill: { color: 'EFF4F8' }, line: { color: C.line } });
+  s.addText('Core idea: flexible device mapping + efficient transitions between training and generation layouts.', { x: 1.22, y: 5.73, w: 7.25, h: 0.2, fontSize: 13.2, bold: true, align: 'center', color: C.navy, margin: 0 });
+
+  addCard(s, 9.5, 1.58, 3.28, 4.9, { fill: C.white });
+  s.addText('Neighboring design point', { x: 9.82, y: 1.96, w: 2.62, h: 0.34, fontSize: 18.5, bold: true, color: C.navy, margin: 0 });
+  addPill(s, 'OpenRLHF', 9.82, 2.51, 1.15, C.purple, C.purpleLight);
+  addBulletList(s, [
+    'Ray orchestration',
+    'DeepSpeed training',
+    'vLLM generation',
+    'Actor / reward / reference / critic placement',
+    'Agent-based execution pipeline'
+  ], 9.83, 3.03, 2.52, 2.36, { fontSize: 13.7, paraSpaceAfterPt: 7 });
+  s.addText('Use veRL here as the representative flexible architecture; present OpenRLHF as an adjacent stack, not an inferior one.', { x: 9.84, y: 5.55, w: 2.5, h: 0.56, fontSize: 11.5, italic: true, color: C.muted, align: 'center', margin: 0 });
+  addSource(s, 'Sources: veRL official repository; OpenRLHF official repository and architecture documentation.');
+  addNotes(s, 'The point is that veRL makes the dataflow and backend mapping explicit. Mention OpenRLHF as a strong adjacent design using Ray, DeepSpeed, and vLLM. Avoid claiming a universal performance winner.');
+}
+
+// 10 AReaL async
+{
+  const s = pptx.addSlide('MASTER');
+  addTitle(s, 'Representative Layer 6: AReaL', 'The frontier moves from batch RL to continuously running agent–environment systems.');
+  addPill(s, 'ASYNC / AGENTIC RL', 0.55, 1.18, 1.55, C.red, C.redLight);
+
+  addCard(s, 0.55, 1.58, 5.9, 4.85, { fill: C.white });
+  s.addText('Synchronous loop', { x: 0.9, y: 1.95, w: 2.3, h: 0.34, fontSize: 20, bold: true, color: C.navy, margin: 0 });
+  const sync = [
+    {y:2.55,t:'Generate a complete batch',c:C.blue,f:C.blueLight},
+    {y:3.42,t:'Wait for the longest trajectory',c:C.orange,f:C.orangeLight},
+    {y:4.29,t:'Train on the batch',c:C.purple,f:C.purpleLight},
+    {y:5.16,t:'Refresh rollout workers',c:C.green,f:C.greenLight}
+  ];
+  sync.forEach((b,i)=>{
+    s.addShape(SH.roundRect,{x:1.0,y:b.y,w:4.55,h:0.55,rectRadius:0.03,fill:{color:b.f},line:{color:b.c}});
+    s.addText(b.t,{x:1.2,y:b.y+0.16,w:4.15,h:0.2,fontSize:13.2,bold:true,align:'center',color:C.navy,margin:0});
+    if(i<sync.length-1) addArrow(s,3.28,b.y+0.58,3.28,b.y+0.82,C.muted,1.5);
+  });
+
+  addCard(s, 6.85, 1.58, 5.93, 4.85, { fill: C.white });
+  s.addText('Fully asynchronous loop', { x: 7.2, y: 1.95, w: 2.9, h: 0.34, fontSize: 20, bold: true, color: C.navy, margin: 0 });
+  // async diagram
+  for(let i=0;i<3;i++){
+    s.addShape(SH.roundRect,{x:7.25,y:2.55+i*0.82,w:2.05,h:0.5,rectRadius:0.03,fill:{color:C.tealLight},line:{color:C.teal}});
+    s.addText(`Rollout worker ${i+1}`,{x:7.42,y:2.7+i*0.82,w:1.72,h:0.18,fontSize:11.7,bold:true,align:'center',color:C.navy,margin:0});
+    addArrow(s,9.34,2.8+i*0.82,9.88,2.8+i*0.82,C.teal,1.5);
+  }
+  s.addShape(SH.roundRect,{x:9.92,y:2.62,w:1.18,h:2.05,rectRadius:0.04,fill:{color:C.orangeLight},line:{color:C.orange}});
+  s.addText('Trajectory\nstream',{x:10.07,y:3.2,w:0.88,h:0.7,fontSize:15,bold:true,align:'center',color:C.orange,margin:0});
+  addArrow(s,11.12,3.64,11.55,3.64,C.purple,1.7);
+  s.addShape(SH.roundRect,{x:11.58,y:2.82,w:0.9,h:1.65,rectRadius:0.04,fill:{color:C.purpleLight},line:{color:C.purple}});
+  s.addText('Trainer\nupdates',{x:11.69,y:3.23,w:0.68,h:0.7,fontSize:14,bold:true,align:'center',color:C.purple,margin:0});
+  s.addText('Higher utilization', { x: 7.25, y: 5.28, w: 2.1, h: 0.28, fontSize: 15.5, bold: true, color: C.green, margin: 0 });
+  s.addText('↔', { x: 9.5, y: 5.22, w: 0.42, h: 0.32, fontSize: 22, bold: true, align: 'center', color: C.muted, margin: 0 });
+  s.addText('Policy staleness', { x: 10.03, y: 5.28, w: 2.15, h: 0.28, fontSize: 15.5, bold: true, color: C.red, margin: 0 });
+  s.addText('Agentic RL adds multi-turn tools, external environments, failures, and long-horizon credit assignment.', { x: 7.28, y: 5.75, w: 5.05, h: 0.46, fontSize: 13, bold: true, align: 'center', color: C.navy, margin: 0 });
+  addSource(s, 'Source: AReaL official repository — fully asynchronous agentic RL, synchronous/asynchronous modes, multi-turn examples.');
+  addNotes(s, 'Present the async loop as a systems trade-off, not a free speedup. Better utilization can create off-policy or stale-policy data. Agentic workloads make this more important because trajectory duration varies dramatically.');
