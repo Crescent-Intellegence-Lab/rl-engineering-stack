@@ -1,0 +1,12 @@
+{
+  "name": "rl-engineering-tools-presentation",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PowerPoint source for the RL Engineering Tools presentation",
+  "scripts": {
+    "build": "node src/build.js"
+  },
+  "dependencies": {
+    "pptxgenjs": "3.12.0"
+  }
+}
