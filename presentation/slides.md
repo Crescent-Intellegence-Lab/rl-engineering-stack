@@ -4,7 +4,7 @@ theme: default
 paginate: true
 size: 16:9
 header: RL Engineering Tools
-footer: Crescent-Intellegence-Lab · July 2026
+footer: Crescent-Intellegence-Lab · Student Deck · July 2026
 style: |
   section {
     font-family: Arial, Helvetica, sans-serif;
@@ -24,100 +24,88 @@ style: |
     background: #e6f7f5;
     padding: 12px 20px;
   }
-  .title-slide {
-    background: #091826;
-    color: white;
-  }
+  .title-slide { background: #091826; color: white; }
   .title-slide h1 { color: white; font-size: 48px; }
   .title-slide h2 { color: #a7e8e4; font-weight: normal; }
-  .muted { color: #64748b; }
-  .small { font-size: 18px; }
   .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-  .card {
-    background: white;
-    border: 1px solid #d6dee8;
-    border-radius: 12px;
-    padding: 18px 22px;
-  }
-  .accent { color: #16a6a1; }
-  .warning { color: #dc2626; }
-  .center { text-align: center; }
+  .card { background: white; border: 1px solid #d6dee8; border-radius: 12px; padding: 18px 22px; }
 ---
 
 <!-- _class: title-slide -->
 
 # RL Engineering Tools
 
-## From Classical RL to LLM and Agentic RL
+## From Classical RL to LLM Agents
 
-A representative, architecture-oriented landscape — not an exhaustive benchmark
+A student-facing map of what each tool layer solves, when to use it, and how the bottleneck changes.
 
 **Shuo Yan · Crescent-Intellegence-Lab · July 2026**
 
 ---
 
-# How to Read This Landscape
+# Why Do RL Tools Exist?
+
+A reinforcement learning project is not just an algorithm; it is a data-producing training loop.
+
+```text
+Environment → Policy → Collector → Learner → Evaluator
+```
+
+| Component | What it does |
+|---|---|
+| Environment | Produces observations and rewards |
+| Policy | Chooses actions |
+| Collector | Records trajectories |
+| Learner | Updates model parameters |
+| Evaluator | Checks progress and failures |
+
+> As tasks get larger, different parts of this loop become bottlenecks. RL libraries mostly differ in which bottleneck they make easier to handle.
+
+---
+
+# Classical RL Stack: The Baseline Mental Model
+
+```text
+Environment → Policy → Collector → Learner → Evaluation
+```
 
 <div class="three">
 <div class="card">
 
-## Evaluated
+## On-policy
 
-- Official documentation
-- Repository architecture
-- Supported algorithms and backends
-- Source organization and examples
-- Primary engineering abstraction
+- PPO
+- A2C
+- Collect fresh rollouts before updates
 
 </div>
 <div class="card">
 
-## Not Claimed
+## Off-policy
 
-- Identical-hardware benchmark
-- Universal speed ranking
-- Long-running reliability comparison
-- Hands-on use of every project
-- “More algorithms = better system”
+- DQN
+- SAC / TD3
+- Reuse data from a replay buffer
 
 </div>
 <div class="card">
 
-## Evidence Labels
+## Engineering questions
 
-- **Hands-on**: executed locally
-- **Source-reviewed**: docs and code inspected
-- **Mention-only**: used to position the landscape
+- How fast can we sample?
+- Where is data stored?
+- How reproducible is training?
 
 </div>
 </div>
 
-> The goal is to explain what engineering problem each layer solves.
-
 ---
 
-# One RL Stack, Multiple Engineering Layers
-
-| Layer | Representative tool | Main abstraction |
-|---|---|---|
-| Environment API | **Gymnasium** | Interaction contract |
-| Algorithm implementation | **CleanRL / SB3** | Transparency vs. reuse |
-| Distributed classical RL | **RLlib** | Actors, learners, resources |
-| LLM post-training | **TRL** | Trainer-first alignment |
-| Distributed LLM RL | **veRL** | Rollout/training orchestration |
-| Async and Agentic RL | **AReaL** | Streaming trajectories |
-
-> As scale increases, the bottleneck moves from algorithm correctness to rollout throughput, model placement, weight synchronization, and environment execution.
-
----
-
-# Representative Layer 1: Gymnasium
+# Gymnasium: Standardizing the Environment API
 
 <div class="columns">
 <div class="card">
-
-## Standard interaction
 
 ```python
 observation, info = env.reset()
@@ -127,25 +115,25 @@ terminated, truncated, info = \
     env.step(action)
 ```
 
-A common contract across classic control, Atari, MuJoCo, and custom environments.
+The same interaction pattern works across classic control, Atari-style tasks, MuJoCo-style control, and custom environments.
 
 </div>
 <div>
 
-## Standardizes
+## What it gives you
 
-- `reset()` and `step()`
+- `reset()` / `step()`
 - Action and observation spaces
-- Termination vs. truncation
-- Wrappers and vector environments
-- Environment registration
+- Wrappers
+- Vectorized environments
+- Custom environment pattern
 
-## Does not provide
+## What it does not do
 
-- PPO, DQN, or SAC
-- Replay buffers
-- Advantage estimation
-- Distributed learning
+- Train PPO
+- Manage replay buffers
+- Estimate advantages
+- Schedule workers
 
 </div>
 </div>
@@ -154,120 +142,133 @@ A common contract across classic control, Atari, MuJoCo, and custom environments
 
 ---
 
-# Representative Layer 2: CleanRL vs. Stable-Baselines3
+# CleanRL vs. Stable-Baselines3
+
+The right implementation style depends on whether you need to understand internals or run a reliable baseline.
 
 <div class="columns">
 <div class="card">
 
-## CleanRL — transparency
+## CleanRL — transparent
 
 ```text
-environment loop
-→ rollout
-→ GAE
-→ minibatches
-→ PPO loss
-→ optimizer step
+env loop → rollout → GAE
+→ PPO loss → optimizer step
 ```
 
-- Full execution path in one file
-- Easy to audit and modify
-- Accepts duplicated code to reduce abstraction
+- Best for learning and modifying algorithms
+- Easy to inspect every detail
+- Less reusable for large codebases
 
 </div>
 <div class="card">
 
-## Stable-Baselines3 — reuse
+## Stable-Baselines3 — reliable baseline
 
 ```python
 model = PPO("MlpPolicy", env)
 model.learn(total_timesteps=100_000)
 ```
 
-- Fast route to a trustworthy baseline
-- Unified API, tests, callbacks, evaluation
-- Core execution hidden behind abstractions
+- Fast route to a trusted baseline
+- Unified API and evaluation utilities
+- Core details are hidden behind abstractions
 
 </div>
 </div>
-
-> CleanRL optimizes for research transparency; SB3 optimizes for reusable reliability.
 
 ---
 
-# Representative Layer 3: RLlib
+# RLlib: Scaling Classical RL Beyond One Process
 
 ```text
 Environment runners × N
-          │
-          ▼
-  distributed samples
-          │
-          ▼
+          ↓
+    sample stream
+          ↓
      Learners × M
-          │
-          ▼
-   updated RL modules
+          ↓
+  updated policy modules
 ```
 
 <div class="columns">
-<div>
+<div class="card">
 
-## Use RLlib when
+## RLlib is useful when
 
-- Many environments or nodes
-- Multi-agent training is central
-- Fault tolerance matters
-- Ray is already in the stack
+- Sampling dominates runtime
+- Multi-agent policies are needed
+- Ray-based cluster scheduling matters
 - Distributed evaluation is required
 
 </div>
-<div>
+<div class="card">
 
-## Engineering cost
+## Cost of this power
 
-- Deeper abstractions
 - More configuration
+- Deeper abstractions
 - More distributed failure modes
-- Harder debugging for small experiments
+- Unnecessary for small single-process baselines
 
 </div>
 </div>
-
-**Takeaway:** RLlib is valuable when sampling and cluster orchestration become first-class problems.
 
 ---
 
-# Why LLM RL Needs a Different Stack
+# Why LLM RL Changes the Tooling Problem
 
 | Dimension | Classical RL | LLM RL |
 |---|---|---|
 | Observation | Small tensor or state | Prompt + conversation history |
-| Action | Discrete or low-dimensional | Hundreds or thousands of tokens |
-| Step latency | Often milliseconds | Seconds, tools, or external jobs |
+| Action | Low-dimensional choice | Hundreds or thousands of tokens |
+| Step time | Often milliseconds | Generation, tools, or external jobs |
 | Policy size | Usually modest | Billions of parameters |
-| Data path | Env → buffer → learner | Rollout → verifier → trainer → sync |
+| Reward | Simulator reward | Reward model, verifier, or environment |
 
-## New systems problems
-
-- Expensive generation
-- Policy, reference, critic, and reward-model placement
-- Different training and inference layouts
-- Repeated weight synchronization
-- Variable-length trajectories and tool failures
+> New bottleneck: rollout generation + reward verification + weight synchronization.
 
 ---
 
-# Representative Layer 4: Hugging Face TRL
+# LLM Post-Training Methods: A Minimal Map
+
+```text
+SFT → Preference Data → Offline Preference Optimization → Online RL → RLVR
+```
+
+<div class="columns">
+<div class="card">
+
+## Offline methods
+
+Examples: DPO, ORPO, KTO.
+
+Train on fixed datasets. No new model-generated rollout is required during each update.
+
+</div>
+<div class="card">
+
+## Online methods
+
+Examples: PPO, GRPO, RLOO.
+
+The current policy generates answers; a reward model, verifier, or environment scores them; then the policy updates.
+
+</div>
+</div>
+
+---
+
+# TRL: The Accessible Entry Point for LLM Post-Training
 
 <div class="three">
 <div class="card">
 
-## Offline
+## Offline trainers
 
 - `SFTTrainer`
 - `DPOTrainer`
-- KTO / ORPO
+- KTO / ORPO workflows
 
 </div>
 <div class="card">
@@ -275,76 +276,92 @@ Environment runners × N
 ## Reward modeling
 
 - `RewardTrainer`
-- `PRMTrainer`
+- Process reward models
 - Custom reward functions
 
 </div>
 <div class="card">
 
-## Online
+## Online trainers
 
 - `GRPOTrainer`
-- `RLOOTrainer`
-- PPO / Online DPO
+- `PPOTrainer`
+- RLOO / Online DPO
 
 </div>
 </div>
 
-## Why it is representative
-
-- Native Transformers ecosystem
-- Trainer-style API
-- PEFT and distributed integrations
-- Low-friction reward-function prototyping
-
-**Limit:** it is not primarily designed around the most complex multi-model cluster orchestration.
+> Use TRL first when you want a simple Hugging Face-native experiment before building a full distributed RL system.
 
 ---
 
-# Representative Layer 5: veRL
+# veRL and OpenRLHF: When LLM RL Becomes a System
+
+Large-scale LLM RL coordinates several models, rollout engines, and training backends.
 
 ```text
-                 RL dataflow / controller
-       ┌──────────┬──────────┬──────────┬──────────┐
-       ▼          ▼          ▼          ▼          ▼
-     Actor    Reference    Critic    Reward     Rollout
-                                                │
-                                      vLLM / SGLang
+Actor · Reference · Critic · Reward / Verifier · Rollout Engine · Trainer
 ```
 
 <div class="columns">
 <div class="card">
 
-## Training backends
+## What veRL represents
 
-- FSDP / FSDP2
-- Megatron-LM
-- Flexible device mapping
+- Separate RL dataflow from backend execution
+- Support multiple rollout and training backends
+- Make worker placement and weight synchronization explicit
 
 </div>
 <div class="card">
 
-## Rollout backends
+## What OpenRLHF represents
 
-- vLLM
-- SGLang
-- Transformers
+- Ray orchestration
+- DeepSpeed training
+- vLLM rollout
+- Model colocation options
 
 </div>
 </div>
-
-**Core idea:** separate the RL dataflow from concrete distributed execution.
-
-**Neighboring design:** OpenRLHF uses Ray + DeepSpeed + vLLM and explicit model placement.
 
 ---
 
-# Representative Layer 6: AReaL
+# Rollout Engines and Training Backends
 
 <div class="columns">
 <div class="card">
 
-## Synchronous loop
+## Rollout engines
+
+- vLLM and SGLang optimize generation throughput
+- They manage batching and KV-cache efficiency
+- They may run separately from the trainer
+
+</div>
+<div class="card">
+
+## Training backends
+
+- FSDP shards model states in PyTorch
+- DeepSpeed ZeRO reduces memory pressure
+- Megatron supports tensor, pipeline, and expert parallelism
+
+</div>
+</div>
+
+> The hard part is synchronization: after training updates the policy, rollout workers need fresh weights without wasting too much time.
+
+---
+
+# Agentic and Asynchronous RL
+
+Tool-using agents make trajectories long, uneven, and hard to schedule synchronously.
+
+<div class="columns">
+<div class="card">
+
+## Synchronous batch RL
 
 ```text
 Generate full batch
@@ -353,108 +370,66 @@ Generate full batch
 → refresh rollout workers
 ```
 
-Simple policy freshness, but barriers can waste resources.
-
 </div>
 <div class="card">
 
-## Fully asynchronous loop
+## Asynchronous RL
 
 ```text
-Rollout workers continuously generate
-             ↓
-       trajectory stream
-             ↓
-Trainer updates continuously
+Rollout workers generate continuously
+        ↓
+trajectory stream
+        ↓
+trainer updates continuously
 ```
 
-Higher utilization, but potentially stale-policy data.
-
 </div>
 </div>
 
-> Central trade-off: **throughput vs. policy freshness**.
-
-Agentic RL adds multi-turn tools, environment failures, and long-horizon credit assignment.
+> Representative idea: AReaL improves utilization by decoupling generation and training, but the trade-off is stale-policy data.
 
 ---
 
-# Where Do the Other Frameworks Fit?
+# How Should Students Choose a Stack?
 
-| Framework | Dominant positioning |
+| Project goal | Good starting point |
 |---|---|
-| LLaMA-Factory | Low-code model adaptation and preference training |
-| ms-swift | Broad LLM/VLM post-training recipes |
-| OpenRLHF | Ray + DeepSpeed + vLLM distributed RLHF |
-| NeMo RL | NVIDIA / Megatron-oriented large-scale stack |
-| slime | Megatron training + SGLang rollout |
-| SkyRL / rLLM | Agent and environment execution layers |
-| Agent Lightning | Train existing agent applications |
+| I want to learn RL internals | Gymnasium + CleanRL |
+| I need a trusted baseline | Stable-Baselines3 |
+| I need modular RL research code | Tianshou / TorchRL |
+| I need distributed classical RL | RLlib / Sample Factory |
+| I want small LLM post-training | TRL / LLaMA-Factory / ms-swift |
+| I need distributed LLM RL | veRL / OpenRLHF / NeMo RL |
+| I need tool-using agents | AReaL / SkyRL / rLLM / Agent Lightning |
 
-> This is not a performance ranking. Pick the smallest stack that exposes the engineering question you actually need to study.
-
----
-
-# A Representative 25-Minute Talk
-
-| Case study | Role | Time |
-|---|---|---:|
-| Gymnasium | Environment contract | 2 min |
-| CleanRL vs. SB3 | Implementation trade-off | 4 min |
-| RLlib | Distributed classical RL | 3 min |
-| Why LLM RL differs | Transition | 2 min |
-| TRL | Trainer-first post-training | 4 min |
-| veRL | System-first LLM RL | 5 min |
-| AReaL | Async / agentic frontier | 4 min |
-| Takeaways | Selection and evidence | 1 min |
-
-Keep the full framework catalog in backup material and the GitHub repository.
+> Rule of thumb: choose the smallest stack that exposes the bottleneck you actually need to study.
 
 ---
 
-# Takeaways — and Evidence-Aware Language
+# Key Takeaways
 
 <div class="three">
 <div class="card">
 
-## 1. Compare within a layer
+## 1. Tools live at different layers
 
-Gymnasium is not an algorithm library; vLLM is not an RL trainer.
-
-</div>
-<div class="card">
-
-## 2. Scale changes the bottleneck
-
-Correctness → reuse → distributed sampling → rollout → synchronization → agents.
+Gymnasium, vLLM, and PPO libraries are not direct competitors.
 
 </div>
 <div class="card">
 
-## 3. Qualify claims
+## 2. Scale moves the bottleneck
 
-Say “the official architecture supports…” rather than “it is definitely faster.”
+Correctness → reuse → sampling → rollout → synchronization → agents.
+
+</div>
+<div class="card">
+
+## 3. Evidence matters
+
+Distinguish hands-on results from documentation-based architecture review.
 
 </div>
 </div>
 
-### Recommended phrasing
-
-> “I use veRL as a representative example of a flexible distributed LLM RL architecture, based on its documented backends and worker model.”
-
-<span class="warning">Avoid:</span> “veRL is faster than OpenRLHF” without a controlled comparison.
-
----
-
-# Primary Sources
-
-- Gymnasium — <https://gymnasium.farama.org/>
-- CleanRL — <https://docs.cleanrl.dev/>
-- Stable-Baselines3 — <https://stable-baselines3.readthedocs.io/en/master/>
-- Ray RLlib — <https://docs.ray.io/en/latest/rllib/index.html>
-- Hugging Face TRL — <https://huggingface.co/docs/trl/index>
-- veRL — <https://github.com/verl-project/verl>
-- OpenRLHF — <https://github.com/OpenRLHF/OpenRLHF>
-- AReaL — <https://github.com/areal-project/AReaL>
-
-> Framework capabilities change rapidly. Pin the exact release used in each experiment.
+**Next step:** run one small classical RL example and one small LLM post-training configuration before comparing large systems.
