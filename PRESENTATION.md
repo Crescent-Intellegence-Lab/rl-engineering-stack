@@ -1,12 +1,17 @@
-# Presentation
+# Student Presentation
 
-The repository includes a 25–30 minute English presentation:
+The repository includes an English student-facing presentation on reinforcement-learning engineering tools:
 
-- [GitHub-native Marp slides](presentation/slides.md)
-- [Presentation directory and build instructions](presentation/README.md)
-- [Presenter guide](presentation/presenter-guide.md)
-- [PptxGenJS source](presentation/src/build.js)
+- [GitHub-readable slides](presentation/slides.md)
+- [PDF version](presentation/rl-engineering-tools-student-facing.pdf)
+- [Slide montage](presentation/montage.png)
+- [Student study guide](presentation/student-study-guide.md)
+- [Presentation directory](presentation/README.md)
 
-The deck uses six representative case studies—Gymnasium, CleanRL versus Stable-Baselines3, RLlib, TRL, veRL, and AReaL—to explain how the RL engineering bottleneck changes from environment interaction to distributed rollout and agent execution.
+The deck starts from the classical environment–policy–collector–learner loop and then explains Gymnasium, CleanRL, Stable-Baselines3, RLlib, TRL, veRL, OpenRLHF, rollout engines, training backends, and asynchronous agentic RL.
 
-The presentation explicitly separates architecture review from hands-on benchmarking and includes primary-source links for every representative framework.
+The editable `.pptx` is intentionally not committed by this update. It can be uploaded manually to:
+
+```text
+presentation/rl-engineering-tools-student-facing.pptx
+```
